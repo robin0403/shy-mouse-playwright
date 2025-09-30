@@ -176,15 +176,18 @@ class ShyMouse {
     const p2 = { x: c2x, y: c2y };
     const p3 = { x: targetX, y: targetY };
 
+    // Add Gaussian jitter for micro-movements (human hand tremor)
+    const jitterStdDev = options.jitterStdDev ?? 1.5; // Configurable, default 1.5 pixels
+
     // Pre-calculate all points along the Bezier path with easing for acceleration/deceleration
     let points = [];
+
     for (let i = 1; i <= numPoints; i++) {
+
       const linearT = i / numPoints;
       const easedT = this.easeInOutCubic(linearT); // Apply easing for human-like velocity profile
       let point = this.getBezierPoint(easedT, p0, p1, p2, p3);
 
-      // Add Gaussian jitter for micro-movements (human hand tremor)
-      const jitterStdDev = options.jitterStdDev ?? 1.5; // Configurable, default 1.5 pixels
       point.x += this.randomGaussian(0, jitterStdDev);
       point.y += this.randomGaussian(0, jitterStdDev);
 
@@ -193,12 +196,14 @@ class ShyMouse {
       point.y = this.clamp(point.y, effectiveMinY, effectiveMaxY);
 
       points.push(point);
+
     }
 
     let finalPos = { x: targetX, y: targetY };
 
     // Optional overshoot and correction for added realism (20% chance if distance > 100px)
     const overshootProb = options.overshootProb ?? 0.2;
+
     if (!isRandomTarget && D > 100 && Math.random() < overshootProb) {
       // Calculate overshoot point: extend beyond target by 10-30% of W
       const overshootFactor = Math.random() * 0.2 + 0.1;

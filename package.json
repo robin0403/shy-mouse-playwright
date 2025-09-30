@@ -1,21 +1,20 @@
 {
   "name": "@ab6162/shy-mouse-playwright",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple npm package to humanize mouse movements in Playwright or Patchright.",
   "main": "ShyMouse.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ab6162/shy-mouse-playwright.git"
+    "url": "git+https://github.com/AB6162/shy-mouse-playwright.git"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "author": "AB6162",
   "license": "MIT",
   "private": false,
   "bugs": {
-    "url": "https://github.com/ab6162/shy-mouse-playwright/issues"
+    "url": "https://github.com/AB6162/shy-mouse-playwright/issues"
   },
-  "homepage": "https://github.com/ab6162/shy-mouse-playwright#readme",
+  "homepage": "https://github.com/AB6162/shy-mouse-playwright#readme",
   "keywords": [
     "node.js",
     "nodejs",
