@@ -54,10 +54,16 @@ class ShyMouse {
 
     // If initial position is (0,0), initialize to viewport center for natural start
     if (startX === 0 && startY === 0) {
+
       startX = viewport.width / 2;
       startY = viewport.height / 2;
+
+      startX += (Math.random() * 2 - 1) * (viewport.width / 4);
+      startY += (Math.random() * 2 - 1) * (viewport.height / 4);
+
       this.lastPos.x = startX;
       this.lastPos.y = startY;
+
     }
 
     const { points, finalPos } = this.calculateBezierPoints(startX, startY, targetX, targetY, box, viewport, options);
@@ -96,10 +102,16 @@ class ShyMouse {
 
     // If initial position is (0,0), initialize to viewport center for natural start
     if (startX === 0 && startY === 0) {
+
       startX = viewport.width / 2;
       startY = viewport.height / 2;
+
+      startX += (Math.random() * 2 - 1) * (viewport.width / 4);
+      startY += (Math.random() * 2 - 1) * (viewport.height / 4);
+
       this.lastPos.x = startX;
       this.lastPos.y = startY;
+
     }
 
     const { points, finalPos } = this.calculateBezierPoints(startX, startY, null, null, null, viewport, options);
