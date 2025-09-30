@@ -5,7 +5,8 @@ class ShyMouse {
     this.lastPos = { x: 0, y: 0 }; // Initial position; can be set manually if needed
   }
 
-  async isElementInViewport(element, viewport, buffer = 0) {
+  async isElementInViewport(element, viewport, buffer = 10) {
+
     const box = await element.boundingBox();
 
     if (!box) return false;
