@@ -5,6 +5,155 @@ class ShyMouse {
     this.lastPos = { x: 0, y: 0 }; // Initial position; can be set manually if needed
   }
 
+  async isElementInViewport(element, viewport, buffer = 0) {
+    const box = await element.boundingBox();
+
+    if (!box) return false;
+
+    const scrollY = await this.page.evaluate(() => window.scrollY);
+    const viewTop = scrollY - buffer;
+    const viewBottom = scrollY + viewport.height + buffer;
+
+    // Check if at least part of the element is visible
+    return (box.y < viewBottom && box.y + box.height > viewTop);
+
+  }
+
+  async getCurrentScrollY() {
+    return await this.page.evaluate(() => window.scrollY);
+  }
+
+  async scrollToElement(element, options = {}) {
+
+    const viewport = this.page.viewportSize();
+
+    if (await this.isElementInViewport(element, viewport, options.visibilityBuffer ?? 50)) {
+      return; // Already visible
+    }
+
+    const box = await element.boundingBox();
+
+    if (!box) throw new Error('Element has no bounding box');
+
+    // Target scroll to bring element to center or near top (configurable)
+    const targetPosition = options.targetPosition ?? 'center'; // 'top', 'center', 'bottom'
+    let targetScrollY;
+
+    const scrollY = await this.getCurrentScrollY();
+
+    if (targetPosition === 'top') {
+      targetScrollY = box.y - (options.offset ?? 100);
+    } else if (targetPosition === 'bottom') {
+      targetScrollY = box.y + box.height - viewport.height + (options.offset ?? 100);
+    } else { // center
+      targetScrollY = box.y + box.height / 2 - viewport.height / 2;
+    }
+
+    targetScrollY = Math.max(0, targetScrollY); // Don't scroll negative
+
+    // Move mouse to a random position in viewport for realistic scrolling (humans hover while scrolling)
+    const hoverOptions = {
+      ...options,
+      defaultTargetWidth: viewport.width / 2 // Larger "target" for random move
+    };
+
+    await this.move(hoverOptions);
+
+    // Calculate total delta
+    let remainingDelta = targetScrollY - scrollY;
+    const direction = remainingDelta > 0 ? 1 : -1;
+    remainingDelta = Math.abs(remainingDelta);
+
+    // Number of scroll steps based on distance (similar to Fitts, but for scroll)
+    const scrollID = Math.log2(remainingDelta / 100 + 1); // Assume 100px as "width"
+    const numSteps = Math.max(5, Math.round(8 * scrollID)); // Min 5, scale up
+
+    // Optional overshoot (20% chance if delta > 200px)
+    const overshootProb = options.overshootProb ?? 0.2;
+
+    let overshootAmount = 0;
+
+    if (remainingDelta > 200 && Math.random() < overshootProb) {
+
+      overshootAmount = Math.random() * 0.3 * viewport.height + 0.1 * viewport.height; // 10-40% of viewport
+      targetScrollY += direction * overshootAmount;
+      remainingDelta += overshootAmount;
+
+    }
+
+    let cumulativeT = 0;
+
+    for (let i = 1; i <= numSteps; i++) {
+
+      let currentScrollY = await this.getCurrentScrollY();
+      remainingDelta = Math.abs(targetScrollY - currentScrollY);
+
+      if (remainingDelta < 10) break; // Close enough
+
+      const linearT = i / numSteps;
+      const easedT = this.easeInOutCubic(linearT);
+      const stepFraction = easedT - cumulativeT;
+      cumulativeT = easedT;
+
+      let stepDelta = stepFraction * remainingDelta;
+
+      // Add Gaussian jitter to step delta
+      const jitterStdDev = options.scrollJitterStdDev ?? 20; // Pixels
+      stepDelta += this.randomGaussian(0, jitterStdDev);
+      stepDelta = Math.max(10, Math.min(stepDelta, 200)); // Clamp to realistic wheel deltas
+
+      await this.page.mouse.wheel(0, direction * stepDelta);
+
+      // Random delay between scrolls (20-100ms for human feel)
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 80 + 20));
+
+    }
+
+    // If overshot, correct back
+    if (overshootAmount > 0) {
+
+      // Short correction scroll in opposite direction
+      const correctionSteps = Math.round(numSteps / 3);
+      let correctionCumulativeT = 0;
+
+      for (let i = 1; i <= correctionSteps; i++) {
+
+        let currentScrollY = await this.getCurrentScrollY();
+        let correctionDelta = Math.abs((targetScrollY - direction * overshootAmount) - currentScrollY);
+
+        if (correctionDelta < 10) break;
+
+        const linearT = i / correctionSteps;
+        const easedT = this.easeInOutCubic(linearT);
+        const stepFraction = easedT - correctionCumulativeT;
+        correctionCumulativeT = easedT;
+
+        let stepDelta = stepFraction * correctionDelta;
+        stepDelta += this.randomGaussian(0, jitterStdDev / 2); // Less jitter
+        stepDelta = Math.max(10, Math.min(stepDelta, 150));
+
+        await this.page.mouse.wheel(0, -direction * stepDelta);
+
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 60 + 10)); // Faster correction
+
+      }
+
+    }
+
+    // Final check and small adjustment if needed
+    if (!await this.isElementInViewport(element, viewport, 0)) {
+
+      const finalScrollY = await this.getCurrentScrollY();
+      const finalDelta = (box.y + box.height / 2 - viewport.height / 2) - finalScrollY;
+
+      if (Math.abs(finalDelta) > 10) {
+        await this.page.mouse.wheel(0, finalDelta);
+      }
+
+    }
+
+  }
+
   // Helper function to calculate point on cubic Bezier curve
   getBezierPoint(t, p0, p1, p2, p3) {
     const omt = 1 - t;
@@ -36,6 +185,11 @@ class ShyMouse {
     // Get element bounding box
     const box = await element.boundingBox();
     const viewport = this.page.viewportSize();
+
+    try {
+      await this.scrollToElement(element, options);
+    } catch (error) {
+    }
 
     // Configurable padding for click (fraction of element size, e.g., 0.8 means up to 80% from center)
     const clickPaddingFactor = options.clickPadding ?? 0.8;
@@ -70,9 +224,12 @@ class ShyMouse {
 
     // Move mouse to each pre-calculated point with random delays for human-like movement
     for (const point of points) {
+
       await this.page.mouse.move(point.x, point.y);
+
       // Add a small random delay after each move (5-20ms, varied for more natural feel)
       await new Promise(resolve => setTimeout(resolve, Math.random() * 15 + 5));
+
     }
 
     // Perform the click at the final position
@@ -80,11 +237,13 @@ class ShyMouse {
 
     // Optional post-click micro-movement for added realism (small jitter)
     if (Math.random() < 0.5) {
+
       const jitterX = finalPos.x + this.randomGaussian(0, 5);
       const jitterY = finalPos.y + this.randomGaussian(0, 5);
       await this.page.mouse.move(this.clamp(jitterX, 0, viewport.width), this.clamp(jitterY, 0, viewport.height));
       await new Promise(resolve => setTimeout(resolve, Math.random() * 50 + 20));
       await this.page.mouse.move(finalPos.x, finalPos.y);
+
     }
 
     // Update last position
@@ -118,9 +277,12 @@ class ShyMouse {
 
     // Move mouse to each pre-calculated point with random delays for human-like movement
     for (const point of points) {
+
       await this.page.mouse.move(point.x, point.y);
+
       // Add a small random delay after each move (5-20ms, varied for more natural feel)
       await new Promise(resolve => setTimeout(resolve, Math.random() * 15 + 5));
+
     }
 
     // Update last position (no click)
@@ -150,6 +312,7 @@ class ShyMouse {
 
     // Determine effective width W for Fitts's Law
     let W;
+
     if (box === null) {
       W = options.defaultTargetWidth ?? 100;
     } else {
@@ -217,6 +380,7 @@ class ShyMouse {
     const overshootProb = options.overshootProb ?? 0.2;
 
     if (!isRandomTarget && D > 100 && Math.random() < overshootProb) {
+
       // Calculate overshoot point: extend beyond target by 10-30% of W
       const overshootFactor = Math.random() * 0.2 + 0.1;
       const overshootDist = overshootFactor * W;
@@ -230,6 +394,7 @@ class ShyMouse {
         ...options,
         overshootProb: 0 // Prevent recursive overshoot
       });
+
       points = overshootResult.points;
 
       // Short correction path back to target (fewer points, quicker)
@@ -251,7 +416,9 @@ class ShyMouse {
       const correctionP3 = { x: targetX, y: targetY };
 
       const correctionPoints = [];
+
       for (let i = 1; i <= correctionNumPoints; i++) {
+
         const linearT = i / correctionNumPoints;
         const easedT = this.easeInOutCubic(linearT);
         let point = this.getBezierPoint(easedT, correctionP0, correctionP1, correctionP2, correctionP3);
@@ -260,13 +427,16 @@ class ShyMouse {
         point.x = this.clamp(point.x, effectiveMinX, effectiveMaxX);
         point.y = this.clamp(point.y, effectiveMinY, effectiveMaxY);
         correctionPoints.push(point);
+
       }
 
       points = points.concat(correctionPoints);
       finalPos = { x: targetX, y: targetY };
+
     }
 
     return { points, finalPos };
+
   }
 
 }
